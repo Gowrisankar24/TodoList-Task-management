@@ -5,3 +5,6 @@
 body {
     @apply !font-sans;
 }
+.ant-badge-status-dot {
+    @apply !w-3 !h-3;
+}
