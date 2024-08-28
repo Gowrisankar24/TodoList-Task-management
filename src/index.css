@@ -3,8 +3,72 @@
 @tailwind utilities;
 
 body {
-    @apply !font-sans;
+    @apply !font-sans overflow-hidden;
 }
 .ant-badge-status-dot {
     @apply !w-3 !h-3;
+}
+
+.list-items .visible-check {
+    @apply hidden;
+}
+.list-items:hover .visible-check {
+    @apply block;
+}
+.dark {
+    body {
+        @apply !bg-[#192133] !text-white;
+    }
+    .ant-layout-header {
+        @apply !bg-gradient-to-b from-[#141b29] to-[#0c111b];
+    }
+    .ant-layout-content {
+        @apply !bg-[#1c2230] !text-white;
+    }
+    .ant-card,
+    .ant-modal,
+    .ant-modal-content {
+        /* @apply !bg-gradient-to-r from-[#0a3d88] via-[#0b2f79] to-[#0b024a] */
+        @apply !bg-gradient-to-r from-[#0d1627] from-20% to-[#0d1627] to-100% text-white shadow-md shadow-black;
+    }
+    .ant-modal-header {
+        @apply !bg-gradient-to-r from-[#0d1627] from-20% to-[#0d1627] to-100%;
+    }
+    .ant-input-outlined,
+    .ant-input-outlined.ant-input-status-error:not(.ant-input-disabled),
+    .ant-select-outlined,
+    .ant-select-selector,
+    .ant-select-dropdown {
+        @apply !bg-[#1c2230];
+    }
+    .ant-input-wrapper input::placeholder,
+    .ant-input-wrapper input,
+    .ant-input,
+    .ant-input::placeholder,
+    .ant-checkbox-wrapper,
+    .ant-collapse-header-text,
+    .ant-collapse-expand-icon,
+    .ant-list-item-meta-title,
+    .ant-list-item-action li div div,
+    .ant-modal-title,
+    .ant-modal-close-icon,
+    .ant-select-arrow,
+    .ant-select-item-option-content,
+    .ant-select-selection-search input,
+    .ant-select .ant-select-selection-item,
+    .ant-empty-description {
+        @apply !text-white;
+    }
+    .ant-select-item-option-active {
+        @apply !bg-[#0d1627];
+    }
+    .ant-select-item-option-selected {
+        @apply !bg-[#0d1627];
+    }
+    .ant-list-item-meta-description {
+        @apply !text-[#d6d2d2];
+    }
+    .ant-collapse-content {
+        @apply !bg-gradient-to-r from-[#0d1627] from-20% to-[#0d1627] to-100% !text-white;
+    }
 }

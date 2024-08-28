@@ -48,7 +48,7 @@ export const ReusableAddEditCompo = ({ action, item, record, setupdateRecord }) 
                     description: descText,
                     status: 'In Progress',
                 };
-                localStorage.setItem('data', JSON.stringify(newItem));
+                // localStorage.setItem('data', JSON.stringify(newItem));
             }
         }
     };
@@ -56,7 +56,7 @@ export const ReusableAddEditCompo = ({ action, item, record, setupdateRecord }) 
         <>
             {action === 'Edit' ? (
                 <span
-                    className="cursor-pointer"
+                    className="hover:scale-150"
                     onClick={() => {
                         setIsModalVisible(true);
                         setTitleText(item?.title);
@@ -65,28 +65,20 @@ export const ReusableAddEditCompo = ({ action, item, record, setupdateRecord }) 
                         form.setFieldsValue({
                             title: item?.title,
                             description: item?.description.props.children[0],
-                            status: (
-                                <>
-                                    <Badge
-                                        status={item?.status.props.children[0]?.props?.status}
-                                        className="me-2"
-                                    />
-                                    {item?.status.props.children[1]}
-                                </>
-                            ),
+                            status: item?.status.props.children[1],
                         });
                     }}>
-                    <HiOutlinePencilAlt size={20} color="blue" />
+                    <HiOutlinePencilAlt size={20} color={'blue'} />
                 </span>
             ) : (
-                <div className="float-right absolute bottom-16 right-28">
+                <div className="relative left-[75%] sm:left-[90%] md:left-[90%] lg:left-[92%] xl:left-[95%]">
                     <Button
                         className="rounded-[50%] w-16 h-16 bg-blue-500 hover:!bg-blue-500"
                         onClick={() => {
                             setIsModalVisible(true);
                             setTitleText('');
                             setDescText('');
-                            form.resetFields();
+                            form?.resetFields();
                         }}>
                         <FaPlus size={25} color="white" />
                     </Button>
@@ -143,7 +135,7 @@ export const ReusableAddEditCompo = ({ action, item, record, setupdateRecord }) 
                                             {
                                                 label: (
                                                     <>
-                                                        <Badge status="default" className="me-2" />
+                                                        <Badge status="warning" className="me-2" />
                                                         Pending
                                                     </>
                                                 ),
@@ -152,7 +144,10 @@ export const ReusableAddEditCompo = ({ action, item, record, setupdateRecord }) 
                                             {
                                                 label: (
                                                     <>
-                                                        <Badge status="warning" className="me-2" />
+                                                        <Badge
+                                                            status="processing"
+                                                            className="me-2"
+                                                        />
                                                         In Progress
                                                     </>
                                                 ),

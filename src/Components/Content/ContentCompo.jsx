@@ -1,5 +1,17 @@
-import React, { Children, useEffect, useState } from 'react';
-import { Card, Col, Layout, Row, Input, Collapse, Badge, List, Popconfirm, Checkbox } from 'antd';
+import React, { useEffect, useRef, useState } from 'react';
+import {
+    Card,
+    Col,
+    Layout,
+    Row,
+    Input,
+    Collapse,
+    Badge,
+    List,
+    Popconfirm,
+    Checkbox,
+    Empty,
+} from 'antd';
 import { AiOutlineDelete } from 'react-icons/ai';
 import { ReusableAddEditCompo } from './ReusableAddEditCompo';
 import { useDispatch, useSelector } from 'react-redux';
@@ -9,6 +21,7 @@ import dayjs from 'dayjs';
 export const ContentCompo = () => {
     const { Content } = Layout;
     const { Search } = Input;
+    const collapseRef = useRef(null);
     // const dispatch = useDispatch();
     const checkboxOptions = ['In Progress', 'Pending', 'Completed'];
     const [inProgressRec, setInProgressRec] = useState([]);
@@ -17,6 +30,7 @@ export const ContentCompo = () => {
     const [progressCount, setProgressCount] = useState(0);
     const [pendingRecCount, setPendingRecCount] = useState(0);
     const [completedRecCount, setCompletedRecCount] = useState(0);
+    const [searchVal, setSearchVal] = useState('');
     const [checkedList, setCheckedList] = useState(checkboxOptions);
     const titleText = useSelector(state => state.TitleSlice?.textVal);
     const descText = useSelector(state => state.TitleSlice?.descVal);
@@ -35,7 +49,7 @@ export const ContentCompo = () => {
             ),
             status: (
                 <>
-                    <Badge status="warning" className="me-2" />
+                    <Badge status="processing" className="me-2" />
                     In Progress
                 </>
             ),
@@ -53,7 +67,7 @@ export const ContentCompo = () => {
             ),
             status: (
                 <>
-                    <Badge status="default" className="me-2" />
+                    <Badge status="warning" className="me-2" />
                     Pending
                 </>
             ),
@@ -134,10 +148,10 @@ export const ContentCompo = () => {
                 <Badge
                     status={
                         statustext === 'Pending'
-                            ? 'default'
+                            ? 'warning'
                             : statustext === 'Completed'
                             ? 'success'
-                            : 'warning'
+                            : 'processing'
                     }
                     className="me-2"
                 />
@@ -173,7 +187,7 @@ export const ContentCompo = () => {
                 </>
             ),
             children: (
-                <Row gutter={(16, 16)}>
+                <Row gutter={(16, 16)} className="cursor-pointer list-items">
                     <Col span={24}>
                         {inProgressRec?.length > 0 ? (
                             <List
@@ -188,7 +202,9 @@ export const ContentCompo = () => {
                                                     <Row gutter={(16, 16)}>
                                                         <Col span={24}>{item?.status}</Col>
                                                     </Row>
-                                                    <Row gutter={(16, 16)} className="mt-3">
+                                                    <Row
+                                                        gutter={(16, 16)}
+                                                        className="mt-3 visible-check">
                                                         <Col
                                                             span={24}
                                                             className="flex flex-1 gap-4">
@@ -199,7 +215,7 @@ export const ContentCompo = () => {
                                                                 setupdateRecord={setInProgressRec}
                                                                 localStorageKey="inprogress"
                                                             />
-                                                            <span className="cursor-pointer">
+                                                            <span className="hover:scale-150">
                                                                 <Popconfirm
                                                                     title="Delete the task"
                                                                     description="Are you sure to delete this task?"
@@ -249,7 +265,7 @@ export const ContentCompo = () => {
                 </>
             ),
             children: (
-                <Row gutter={(16, 16)}>
+                <Row gutter={(16, 16)} className=" cursor-pointer list-items">
                     <Col span={24}>
                         {pendingRec?.length > 0 ? (
                             <List
@@ -264,7 +280,9 @@ export const ContentCompo = () => {
                                                     <Row gutter={(16, 16)}>
                                                         <Col span={24}>{item?.status}</Col>
                                                     </Row>
-                                                    <Row gutter={(16, 16)} className="mt-3">
+                                                    <Row
+                                                        gutter={(16, 16)}
+                                                        className="mt-3 visible-check">
                                                         <Col
                                                             span={24}
                                                             className="flex flex-1 gap-4">
@@ -275,7 +293,7 @@ export const ContentCompo = () => {
                                                                 setupdateRecord={setPendingRec}
                                                                 localStorageKey="pending"
                                                             />
-                                                            <span className="cursor-pointer">
+                                                            <span className="hover:scale-150">
                                                                 <Popconfirm
                                                                     title="Delete the task"
                                                                     description="Are you sure to delete this task?"
@@ -339,39 +357,6 @@ export const ContentCompo = () => {
                                                     <Row gutter={(16, 16)}>
                                                         <Col span={24}>{item?.status}</Col>
                                                     </Row>
-                                                    <Row gutter={(16, 16)} className="mt-3">
-                                                        <Col
-                                                            span={24}
-                                                            className="flex flex-1 gap-4">
-                                                            <ReusableAddEditCompo
-                                                                action="Edit"
-                                                                item={item}
-                                                                record={completedRec}
-                                                                setupdateRecord={setCompletedRec}
-                                                                localStorageKey="completed"
-                                                            />
-                                                            <span className="cursor-pointer">
-                                                                <Popconfirm
-                                                                    title="Delete the task"
-                                                                    description="Are you sure to delete this task?"
-                                                                    onConfirm={() =>
-                                                                        deleteConfirm(
-                                                                            item,
-                                                                            completedRec
-                                                                        )
-                                                                    }
-                                                                    // onCancel={cancel}
-                                                                    okText="Yes"
-                                                                    cancelText="No"
-                                                                    placement="bottomRight">
-                                                                    <AiOutlineDelete
-                                                                        size={20}
-                                                                        color="red"
-                                                                    />
-                                                                </Popconfirm>
-                                                            </span>
-                                                        </Col>
-                                                    </Row>
                                                 </>,
                                             ]}>
                                             <List.Item.Meta
@@ -394,41 +379,51 @@ export const ContentCompo = () => {
 
     //Checkbox filter Collapse data
     const findArr = CollapseItems?.filter(d => checkedList?.includes(d?.label?.props?.children[0]));
+
+    //onSearch
+    const onSearch = val => {
+        setSearchVal(val);
+    };
     return (
         <>
-            <Content className="max-h-full flex justify-center p-8 h-[90vh]">
-                <Card bordered={false} className="w-11/12 h-auto">
+            <Content className="max-h-full p-8 h-[90vh] !overflow-y-scroll">
+                <Card bordered={false} className="h-auto w-full">
                     <Row gutter={(16, 16)}>
-                        <Col span={24}>
-                            <Search
-                                placeholder="Search here"
-                                // onSearch={onSearch}
-                                // style={{
-                                //     maxWidth: 800,
-                                // }}
-                                className="w-1/2 relative left-[25%] mb-2"
+                        <Col xs={24} sm={24} md={10} lg={12} xl={12}>
+                            <span className="font-sans font-bold text-xl flex justify-center md:float-right sm:mb-2">
+                                To Do List Filter
+                            </span>
+                        </Col>
+                        <Col xs={24} sm={24} md={14} lg={12} xl={12}>
+                            <Checkbox.Group
+                                value={checkedList}
+                                options={checkboxOptions}
+                                onChange={handleCheckBoxChange}
+                                className="ms-1 me-1 float-right"
                             />
-                            <div className="float-right">
-                                <Checkbox.Group
-                                    value={checkedList}
-                                    options={checkboxOptions}
-                                    onChange={handleCheckBoxChange}
-                                />
-                            </div>
-                            <div className="my-3">
-                                <Collapse
-                                    items={findArr}
-                                    expandIconPosition="end"
-                                    size="small"
-                                    className="!font-sans italic"
-                                />
-                            </div>
                         </Col>
                     </Row>
                 </Card>
-                <Row gutter={(16, 16)}>
-                    <ReusableAddEditCompo action="Add" />
+
+                <Row gutter={(16, 16)} className="my-5">
+                    <Col span={24} className="my-3" ref={collapseRef}>
+                        {findArr?.length > 0 ? (
+                            <Collapse
+                                items={findArr}
+                                expandIconPosition="end"
+                                size="small"
+                                className="!font-sans italic"
+                            />
+                        ) : (
+                            <Empty />
+                        )}
+                    </Col>
                 </Row>
+                {findArr?.length > 0 && (
+                    <Row gutter={(16, 16)}>
+                        <ReusableAddEditCompo action="Add" />
+                    </Row>
+                )}
             </Content>
         </>
     );
