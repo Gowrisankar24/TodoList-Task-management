@@ -386,7 +386,7 @@ export const ContentCompo = () => {
     };
     return (
         <>
-            <Content className="max-h-full p-8 h-[90vh] !overflow-y-scroll">
+            <Content className="max-h-full p-8 h-[90vh] !overflow-y-auto">
                 <Card bordered={false} className="h-auto w-full">
                     <Row gutter={(16, 16)}>
                         <Col xs={24} sm={24} md={10} lg={12} xl={12}>
