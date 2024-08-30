@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
     Card,
     Col,
@@ -11,11 +11,13 @@ import {
     Popconfirm,
     Checkbox,
     Empty,
+    Avatar,
 } from 'antd';
 import { AiOutlineDelete } from 'react-icons/ai';
+import { IoIosSearch } from 'react-icons/io';
 import { ReusableAddEditCompo } from './ReusableAddEditCompo';
 import { useDispatch, useSelector } from 'react-redux';
-import { isEmpty } from 'lodash';
+import { debounce, isEmpty } from 'lodash';
 import dayjs from 'dayjs';
 
 export const ContentCompo = () => {
@@ -38,13 +40,13 @@ export const ContentCompo = () => {
     const ListItems = [
         {
             key: 1,
-            title: 'Title 1',
+            title: 'Lorem ipsum',
             description: (
                 <span>
                     Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quos est voluptatibus
                     non aperiam. Nihil consectetur perferendis culpa dolorum? Laboriosam natus iure
                     eveniet, perspiciatis consequuntur fugiat nemo dolorum? Omnis, dolor voluptate?
-                    <div className="my-2">Mon 26, Aug 2024 </div>
+                    <div className="my-2 !italic">Mon 26, Aug 2024 </div>
                 </span>
             ),
             status: (
@@ -56,13 +58,13 @@ export const ContentCompo = () => {
         },
         {
             key: 2,
-            title: 'Title 2',
+            title: 'Lorem ipsum',
             description: (
                 <span>
                     Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quos est voluptatibus
                     non aperiam. Nihil consectetur perferendis culpa dolorum? Laboriosam natus iure
                     eveniet, perspiciatis consequuntur fugiat nemo dolorum? Omnis, dolor voluptate?
-                    <div className="my-2">Mon 26, Aug 2024</div>
+                    <div className="my-2 !italic">Mon 26, Aug 2024</div>
                 </span>
             ),
             status: (
@@ -74,13 +76,13 @@ export const ContentCompo = () => {
         },
         {
             key: 3,
-            title: 'Title 3',
+            title: 'Lorem ipsum',
             description: (
                 <span>
                     Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quos est voluptatibus
                     non aperiam. Nihil consectetur perferendis culpa dolorum? Laboriosam natus iure
                     eveniet, perspiciatis consequuntur fugiat nemo dolorum? Omnis, dolor voluptate?
-                    <div className="my-2">Mon 26, Aug 2024</div>
+                    <div className="my-2 !italic">Mon 26, Aug 2024</div>
                 </span>
             ),
             status: (
@@ -140,7 +142,7 @@ export const ContentCompo = () => {
         description: (
             <span>
                 {description}
-                <div className="my-2">{dayjs().format('ddd DD, MMM YYYY')}</div>
+                <div className="my-2 !italic">{dayjs().format('ddd DD, MMM YYYY')}</div>
             </span>
         ),
         status: (
@@ -176,6 +178,18 @@ export const ContentCompo = () => {
     //checkbox Filter
     const handleCheckBoxChange = checkedValues => {
         setCheckedList(checkedValues);
+    };
+
+    //onSearch
+    const onSearch = e => {
+        let val = e?.target?.value;
+        setSearchVal(val?.toLowerCase());
+    };
+    const debounceSearch = debounce(val => onSearch(val), 1000);
+    const filterRec = records => {
+        return records?.filter(d =>
+            d?.label?.props.children[0]?.split(' ').join('').toLowerCase().includes(searchVal)
+        );
     };
     const CollapseItems = [
         {
@@ -241,6 +255,11 @@ export const ContentCompo = () => {
                                                 </>,
                                             ]}>
                                             <List.Item.Meta
+                                                avatar={
+                                                    <Avatar className="bg-transparent border-2 border-blue-700 text-[#0074d9] text-lg font-semibold !font-sans ms-3 dark:border-gray-400 dark:text-white">
+                                                        {item?.title?.charAt(0)}
+                                                    </Avatar>
+                                                }
                                                 title={item.title}
                                                 description={item.description}
                                                 // className="hover:visible"
@@ -318,6 +337,11 @@ export const ContentCompo = () => {
                                                 </>,
                                             ]}>
                                             <List.Item.Meta
+                                                avatar={
+                                                    <Avatar className="bg-transparent border-2 border-blue-700 text-[#0074d9] text-lg font-semibold !font-sans ms-3 dark:border-gray-400 dark:text-white">
+                                                        {item?.title?.charAt(0)}
+                                                    </Avatar>
+                                                }
                                                 title={item.title}
                                                 description={item.description}
                                                 // className="hover:visible"
@@ -360,6 +384,11 @@ export const ContentCompo = () => {
                                                 </>,
                                             ]}>
                                             <List.Item.Meta
+                                                avatar={
+                                                    <Avatar className="bg-transparent border-2 border-blue-700 text-[#0074d9] text-lg font-semibold !font-sans ms-3 dark:border-gray-400 dark:text-white">
+                                                        {item?.title?.charAt(0)}
+                                                    </Avatar>
+                                                }
                                                 title={item.title}
                                                 description={item.description}
                                                 // className="hover:visible"
@@ -376,30 +405,30 @@ export const ContentCompo = () => {
             ),
         },
     ];
-
-    //Checkbox filter Collapse data
-    const findArr = CollapseItems?.filter(d => checkedList?.includes(d?.label?.props?.children[0]));
-
-    //onSearch
-    const onSearch = val => {
-        setSearchVal(val);
-    };
     return (
         <>
-            <Content className="max-h-full p-8 h-[90vh] !overflow-y-auto">
+            <Content className="max-h-full p-8 h-[90vh] !overflow-y-auto overflow-x-hidden">
                 <Card bordered={false} className="h-auto w-full">
                     <Row gutter={(16, 16)}>
-                        <Col xs={24} sm={24} md={10} lg={12} xl={12}>
-                            <span className="font-sans font-bold text-xl flex justify-center md:float-right sm:mb-2">
-                                To Do List Filter
-                            </span>
+                        <Col xs={24} sm={24} md={24} lg={12} xl={12}>
+                            <Input
+                                onChange={debounceSearch}
+                                placeholder="Search To-Do"
+                                prefix={
+                                    <IoIosSearch
+                                        size={26}
+                                        className="text-[#0074d9] me-2 dark:!text-white"
+                                    />
+                                }
+                                className="p-2"
+                            />
                         </Col>
-                        <Col xs={24} sm={24} md={14} lg={12} xl={12}>
+                        <Col xs={24} sm={24} md={24} lg={12} xl={12}>
                             <Checkbox.Group
                                 value={checkedList}
                                 options={checkboxOptions}
                                 onChange={handleCheckBoxChange}
-                                className="ms-1 me-1 float-right"
+                                className="ms-1 me-1 flex flex-col mt-2 md:justify-evenly md:mt-2 lg:justify-end sm:flex-row"
                             />
                         </Col>
                     </Row>
@@ -407,21 +436,25 @@ export const ContentCompo = () => {
 
                 <Row gutter={(16, 16)} className="my-5">
                     <Col span={24} className="my-3" ref={collapseRef}>
-                        {findArr?.length > 0 ? (
+                        {!isEmpty(checkedList) ? (
                             <Collapse
-                                items={findArr}
+                                items={filterRec(CollapseItems)?.filter(item =>
+                                    checkedList.includes(item?.label?.props?.children[0])
+                                )}
                                 expandIconPosition="end"
                                 size="small"
-                                className="!font-sans italic"
+                                className="!font-sans"
                             />
                         ) : (
                             <Empty />
                         )}
                     </Col>
                 </Row>
-                {findArr?.length > 0 && (
+                {!isEmpty(checkedList) && (
                     <Row gutter={(16, 16)}>
-                        <ReusableAddEditCompo action="Add" />
+                        <Col span={24}>
+                            <ReusableAddEditCompo action="Add" />
+                        </Col>
                     </Row>
                 )}
             </Content>

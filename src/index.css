@@ -15,6 +15,25 @@ body {
 .list-items:hover .visible-check {
     @apply block;
 }
+.ant-list-item-meta-title {
+    @apply !text-[#0074d9] !font-bold !text-lg;
+}
+.ant-collapse-header-text {
+    @apply !font-sans font-medium;
+}
+.ant-list-item-meta-description {
+    @apply font-medium;
+}
+.ant-modal-close {
+    @apply !left-5 dark:!text-white;
+}
+.ant-modal-title {
+    @apply !ml-9;
+}
+.ant-input::placeholder,
+.ant-input-wrapper input::placeholder {
+    @apply !font-semibold;
+}
 .dark {
     body {
         @apply !bg-[#192133] !text-white;

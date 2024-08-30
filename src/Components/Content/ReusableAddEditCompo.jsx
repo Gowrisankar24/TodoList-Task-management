@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { descTextAction, statusAction, titleTextAction } from '../../reducer/TitleSlice';
 import { debounce } from 'lodash';
 import { HiOutlinePencilAlt } from 'react-icons/hi';
+import { IoArrowBackCircleSharp } from 'react-icons/io5';
 import dayjs from 'dayjs';
 export const ReusableAddEditCompo = ({ action, item, record, setupdateRecord }) => {
     const dispatch = useDispatch();
@@ -71,7 +72,7 @@ export const ReusableAddEditCompo = ({ action, item, record, setupdateRecord }) 
                     <HiOutlinePencilAlt size={20} color={'blue'} />
                 </span>
             ) : (
-                <div className="relative left-[75%] sm:left-[90%] md:left-[90%] lg:left-[92%] xl:left-[95%]">
+                <span className="fixed bottom-3 right-5">
                     <Button
                         className="rounded-[50%] w-16 h-16 bg-blue-500 hover:!bg-blue-500"
                         onClick={() => {
@@ -82,14 +83,15 @@ export const ReusableAddEditCompo = ({ action, item, record, setupdateRecord }) 
                         }}>
                         <FaPlus size={25} color="white" />
                     </Button>
-                </div>
+                </span>
             )}
             <Modal
                 title={action === 'Edit' ? 'Edit Task' : 'Add Todo'}
                 open={isModalVisible}
                 onCancel={() => setIsModalVisible(false)}
                 footer={null}
-                destroyOnClose>
+                destroyOnClose
+                closeIcon={<IoArrowBackCircleSharp size={40} className="" />}>
                 <Row gutter={(16, 16)}>
                     <Col span={24}>
                         <Form
@@ -178,7 +180,11 @@ export const ReusableAddEditCompo = ({ action, item, record, setupdateRecord }) 
                         </Button>
                     </Col>
                     <Col span={12}>
-                        <Button size="large" className="float-right" onClick={hanldeAdd}>
+                        <Button
+                            type="primary"
+                            size="large"
+                            className="float-right"
+                            onClick={hanldeAdd}>
                             {action === 'Edit' ? 'Update' : 'Add'}
                         </Button>
                     </Col>
